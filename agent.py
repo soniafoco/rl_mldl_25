@@ -66,9 +66,12 @@ class Policy(torch.nn.Module):
             Critic
         """
         # TASK 3: forward in the critic network
+        x_critic = self.tanh(self.fc1_critic(x))
+        x_critic = self.tanh(self.fc2_critic(x_critic))
+        state_value = self.fc3_critic_value(x_critic).squeeze(-1)  # Shape: [batch]
 
         
-        return normal_dist
+        return normal_dist, state_value
 
 
 class Agent(object):
@@ -85,7 +88,7 @@ class Agent(object):
         self.done = []
 
 
-    def update_policy(self):
+     def update_policy_rf(self):
         action_log_probs = torch.stack(self.action_log_probs, dim=0).to(self.train_device).squeeze(-1)
         states = torch.stack(self.states, dim=0).to(self.train_device).squeeze(-1)
         next_states = torch.stack(self.next_states, dim=0).to(self.train_device).squeeze(-1)
@@ -100,7 +103,34 @@ class Agent(object):
         #   - compute policy gradient loss function given actions and returns
         #   - compute gradients and step the optimizer
         #
+        discount_returns = discount_rewards(rewards,self.gamma)
+        policy_loss = -torch.sum(action_log_probs*discount_returns)
+        self.optimizer.zero_grad()
+        policy_loss.backward()
+        self.optimizer.step()
 
+        return
+
+    def update_policy_ac(self):
+        action_log_probs = torch.stack(self.action_log_probs, dim=0).to(self.train_device).squeeze(-1)
+        states = torch.stack(self.states, dim=0).to(self.train_device).squeeze(-1)
+        next_states = torch.stack(self.next_states, dim=0).to(self.train_device).squeeze(-1)
+        rewards = torch.stack(self.rewards, dim=0).to(self.train_device).squeeze(-1)
+        done = torch.Tensor(self.done).to(self.train_device)
+
+        self.states, self.next_states, self.action_log_probs, self.rewards, self.done = [], [], [], [], []
+
+        #
+        # TASK 2:
+        #   - compute discounted returns
+        #   - compute policy gradient loss function given actions and returns
+        #   - compute gradients and step the optimizer
+        #
+        discount_returns = discount_rewards(rewards,self.gamma)
+        policy_loss = -torch.sum(action_log_probs*discount_returns)
+        self.optimizer.zero_grad()
+        policy_loss.backward()
+        self.optimizer.step()
 
         #
         # TASK 3:
@@ -110,6 +140,21 @@ class Agent(object):
         #   - compute gradients and step the optimizer
         #
 
+        _, state_values = self.policy(states)
+        _, next_state_values = self.policy(next_states)
+
+        targets = rewards + self.gamma * next_state_values * (1 - done)
+        advantages = targets.detach() - state_values
+
+        actor_loss = -torch.sum(action_log_probs * advantages.detach())
+        critic_loss = F.mse_loss(state_values, targets.detach())
+
+        loss = actor_loss + critic_loss
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
         return        
 
 
@@ -117,7 +162,7 @@ class Agent(object):
         """ state -> action (3-d), action_log_densities """
         x = torch.from_numpy(state).float().to(self.train_device)
 
-        normal_dist = self.policy(x)
+        normal_dist, state_value = self.policy(x)
 
         if evaluation:  # Return mean
             return normal_dist.mean, None

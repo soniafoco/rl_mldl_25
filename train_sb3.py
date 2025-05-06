@@ -23,18 +23,16 @@ def main():
     # TASK 4 & 5: train and test policies on the Hopper env with stable-baselines3
     #
     
-
     model = PPO("MlpPolicy", train_env, verbose=1)
     model.learn(total_timesteps=25000)
-    model.save("ppo_cartpole")
+    model.save("ppo_hopper")
 
-    model = PPO.load("ppo_cartpole")
+    #model = PPO.load("ppo_hopper")
 
     obs = train_env.reset()
     while True:
         action, _states = model.predict(obs)
         obs, rewards, dones, info = train_env.step(action)
-        train_env.render("human")
 
 if __name__ == '__main__':
     main()

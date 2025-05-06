@@ -7,6 +7,11 @@
 import gym
 from env.custom_hopper import *
 
+from stable_baselines3 import PPO
+from stable_baselines3.common.env_util import make_vec_env
+
+
+
 def main():
     train_env = gym.make('CustomHopper-source-v0')
 
@@ -17,6 +22,19 @@ def main():
     #
     # TASK 4 & 5: train and test policies on the Hopper env with stable-baselines3
     #
+    
+
+    model = PPO("MlpPolicy", train_env, verbose=1)
+    model.learn(total_timesteps=25000)
+    model.save("ppo_cartpole")
+
+    model = PPO.load("ppo_cartpole")
+
+    obs = train_env.reset()
+    while True:
+        action, _states = model.predict(obs)
+        obs, rewards, dones, info = train_env.step(action)
+        train_env.render("human")
 
 if __name__ == '__main__':
     main()

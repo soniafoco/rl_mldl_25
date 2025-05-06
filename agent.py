@@ -152,8 +152,11 @@ class Agent(object):
 
     def get_action(self, state, evaluation=False):
         """ state -> action (3-d), action_log_densities """
+
+        # Converts the state from a tensor to a numpy array, converts it to float and pass it to the train device (cpu)
         x = torch.from_numpy(state).float().to(self.train_device)
 
+        # Calls the method .foward() of the class Policy --> equal to self.policy.forward(x)
         normal_dist, state_value = self.policy(x)
 
         if evaluation:  # Return mean

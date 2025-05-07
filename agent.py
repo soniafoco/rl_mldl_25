@@ -78,7 +78,7 @@ class Policy(torch.nn.Module):
 
 class Agent(object):
 
-    def __init__(self, policy, device='cuda'):
+    def __init__(self, policy, device='cpu'):
         self.train_device = device
         self.policy = policy.to(self.train_device)
         self.optimizer = torch.optim.Adam(policy.parameters(), lr=1e-3)

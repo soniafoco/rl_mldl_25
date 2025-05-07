@@ -12,9 +12,9 @@ from agent import Agent, Policy
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--n-episodes', default=100000, type=int, help='Number of training episodes')
-    parser.add_argument('--print-every', default=20000, type=int, help='Print info every <> episodes')
-    parser.add_argument('--device', default='cpu', type=str, help='network device [cpu, cuda]')
+    parser.add_argument('--n-episodes', default=10000, type=int, help='Number of training episodes')
+    parser.add_argument('--print-every', default=2000, type=int, help='Print info every <> episodes')
+    parser.add_argument('--device', default='cuda', type=str, help='network device [cpu, cuda]')
 
     return parser.parse_args()
 
@@ -34,9 +34,10 @@ def main():
 	"""
 		Training
 	"""
-	observation_space_dim = env.observation_space.shape[-1]
-	action_space_dim = env.action_space.shape[-1]
+	observation_space_dim = env.observation_space.shape[-1] #11
+	action_space_dim = env.action_space.shape[-1] #3
 
+	# Creates a Policy and Agent object from the python script agent.py
 	policy = Policy(observation_space_dim, action_space_dim)
 	agent = Agent(policy, device=args.device)
 

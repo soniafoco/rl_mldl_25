@@ -31,7 +31,7 @@ def main():
     #If we want to use deletion and reloading
     """
         del model
-        model = PPO.load("sac_hopper")
+        model = SAC.load("sac_hopper")
     """
 
 

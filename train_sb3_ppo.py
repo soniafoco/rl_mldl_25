@@ -25,7 +25,7 @@ def main():
     
     model = PPO("MlpPolicy", train_env, verbose=1)
 
-    model.learn(total_timesteps=1e6)
+    model.learn(total_timesteps=100000)
 
     model.save("ppo_hopper")
 

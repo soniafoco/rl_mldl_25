@@ -24,7 +24,7 @@ def main():
     
     model = SAC("MlpPolicy", train_env, verbose=1)
 
-    model.learn(total_timesteps=1e6)
+    model.learn(total_timesteps=100000)
 
     model.save("sac_hopper")
 

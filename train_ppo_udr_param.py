@@ -16,8 +16,8 @@ def main():
     print('Action space:', train_env.action_space)  # action-space
     print('Dynamics parameters:', train_env.get_parameters())  # masses of each link of the Hopper
 
-    ppo_policy = False
-    training = False
+    ppo_policy = True
+    training = True
 
     #
     # TASK 4 & 5: train and test policies on the Hopper env with stable-baselines3
@@ -28,15 +28,15 @@ def main():
     for param in params:
         print(f"\nTraining with param={param}")
 
-        train_env = CustomHopper(domain='target', param=param)
-        test_env = CustomHopper(domain='target', param=None)
+        train_env = CustomHopper(domain='source', param=param)
+        test_env = CustomHopper(domain='source', param=None)
 
         if ppo_policy:
 
             if training:
                 model = PPO("MlpPolicy", train_env)
 
-                model.learn(total_timesteps=1e6)
+                model.learn(total_timesteps=1_000_000)
 
                 model.save("ppo_hopper_target")
             
@@ -75,7 +75,7 @@ def main():
                 cumulative_reward = 0
                 obs = test_env.reset()
                 i += 1
-        title = "Simulation on a Source-Target environment with SAC" #change when evaluating
+        title = "Simulation on a Source-Target environment with PPO" #change when evaluating
         print_plot_rewards(rewards,title)
 
 

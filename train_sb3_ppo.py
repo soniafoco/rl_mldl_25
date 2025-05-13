@@ -42,7 +42,7 @@ def main():
     cumulative_reward = 0
     i = 0
         
-    while i <10:
+    while i < 10:
         action, _states = model.predict(obs)
         obs, reward, done, info = train_env.step(action)
         cumulative_reward += reward

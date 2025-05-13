@@ -12,7 +12,7 @@ from .mujoco_env import MujocoEnv
 
 
 class CustomHopper(MujocoEnv, utils.EzPickle):
-    def __init__(self, param, domain=None):
+    def __init__(self, param=None, domain=None):
         MujocoEnv.__init__(self, 4)
         utils.EzPickle.__init__(self)
 
@@ -88,7 +88,9 @@ class CustomHopper(MujocoEnv, utils.EzPickle):
 
     def reset_model(self):
         """Reset the environment to a random initial state"""
-        self.sample_parameters()
+
+        if self.param != None:
+            self.sample_parameters()
 
         qpos = self.init_qpos + self.np_random.uniform(low=-.01, high=.01, size=self.model.nq)
         qvel = self.init_qvel + self.np_random.uniform(low=-.01, high=.01, size=self.model.nv)

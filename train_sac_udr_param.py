@@ -29,7 +29,7 @@ def main():
         print(f"\nTraining with param={param}")
 
         train_env = CustomHopper(domain='target', param=param)
-        test_env = CustomHopper(domain='target', param=param)
+        test_env = CustomHopper(domain='target', param=None)
 
         if ppo_policy:
 

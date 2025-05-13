@@ -34,7 +34,7 @@ class CustomHopper(MujocoEnv, utils.EzPickle):
         # TASK 6: implement domain randomization. Remember to sample new dynamics parameter
         #         at the start of each training episode.
         
-        base_masses = self.original_masses
+        base_masses = self.original_masses[1:]
 
         param = 0.2
         low = (1 - self.param) * base_masses

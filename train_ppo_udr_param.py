@@ -12,10 +12,6 @@ import matplotlib.pyplot as plt
 
 def main():
 
-    print('State space:', train_env.observation_space)  # state-space
-    print('Action space:', train_env.action_space)  # action-space
-    print('Dynamics parameters:', train_env.get_parameters())  # masses of each link of the Hopper
-
     ppo_policy = True
     training = True
 
@@ -30,6 +26,10 @@ def main():
 
         train_env = CustomHopper(domain='source', param=param)
         test_env = CustomHopper(domain='source', param=None)
+
+        print('State space:', train_env.observation_space)  # state-space
+        print('Action space:', train_env.action_space)  # action-space
+        print('Dynamics parameters:', train_env.get_parameters())  # masses of each link of the Hopper
 
         if ppo_policy:
 

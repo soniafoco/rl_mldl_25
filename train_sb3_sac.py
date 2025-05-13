@@ -41,7 +41,8 @@ def main():
     cumulative_reward = 0
     i = 0
         
-    while i <10:
+    while i < 10:
+
         action, _states = model.predict(obs)
         obs, reward, done, info = train_env.step(action)
         cumulative_reward += reward
@@ -51,6 +52,7 @@ def main():
             print(f"Cumulative reward of episode {i}: {cumulative_reward}")
             cumulative_reward = 0
             obs = train_env.reset()
+        
         
 
 if __name__ == '__main__':

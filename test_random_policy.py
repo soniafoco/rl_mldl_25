@@ -5,7 +5,7 @@
             Hopper environment.
 
             For example:
-                - What is the state space in the Hopper environment? Is it discrete or continuous?
+                - What is the state space in the Hopper environment? Is it discrete or continuous? 
                 - What is the action space in the Hopper environment? Is it discrete or continuous?
                 - What is the mass value of each link of the Hopper environment, in the source and target variants respectively?
                 - what happens if you don't reset the environment even after the episode is over?
